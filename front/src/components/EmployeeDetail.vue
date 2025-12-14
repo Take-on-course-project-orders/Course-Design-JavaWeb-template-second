@@ -38,8 +38,8 @@
           </div>
           <div class="detail-item">
             <label>状态</label>
-            <span :class="['isActive', employee.isActive === true ? 'active' : 'inactive']">
-              {{ employee.isActive === true ? '在职' : '离职' }}
+            <span :class="['active', employee.active === true ? 'active' : 'inactive']">
+              {{ employee.active === true ? '在职' : '离职' }}
             </span>
           </div>
           <!-- <div class="detail-item" v-if="employee.createTime">
@@ -62,6 +62,7 @@
 
 <script setup lang="ts">
 import type { Employee } from '@/types/employee'
+
 
 interface Props {
   visible: boolean
@@ -146,7 +147,7 @@ defineEmits<{
   color: #1f2937;
 }
 
-.status {
+.active {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 4px;
@@ -154,12 +155,12 @@ defineEmits<{
   width: fit-content;
 }
 
-.status.active {
+.active.active {
   background: #dcfce7;
   color: #166534;
 }
 
-.status.inactive {
+.active.inactive {
   background: #fee2e2;
   color: #991b1b;
 }

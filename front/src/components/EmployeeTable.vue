@@ -35,8 +35,8 @@
           <td>{{ emp.entryTime }}</td>
           <td>{{emp.birth}}</td>
           <td>
-            <span :class="['status-badge', emp.isActive === true ? 'active' : 'inactive']">
-              {{ emp.isActive === true? '在职' : '离职' }}
+            <span :class="['status-badge', emp.active === true ? 'active' : 'inactive']">
+              {{ emp.active === true? '在职' : '离职' }}
             </span>
           </td>
           <td class="action-cell">

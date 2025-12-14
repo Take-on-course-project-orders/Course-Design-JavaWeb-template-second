@@ -7,9 +7,9 @@
       </div>
       
       <form class="modal-body" @submit.prevent="handleSubmit">
-        <div class="form-group">
+        <div class="form-group" v-if="isEdit">
           <label>ID</label>
-          <input v-model="formData.id" type="text" placeholder="请输入ID" required/>
+          <input v-model="formData.id" type="text" placeholder="请输入ID" disabled />
         </div>
 
         <div class="form-group">
@@ -45,7 +45,7 @@
 
         <div class="form-group">
           <label>状态</label>
-          <select v-model="formData.isActive">
+          <select v-model="formData.active">
             <option :value=true>在职</option>
             <option :value=false>离职</option>
           </select>
@@ -98,13 +98,13 @@ const isEdit = computed(() => !!employee.value?.id)
 const initialFormData = (): Employee => ({
   id: undefined,
   name: '',
-  age: 0,
+  age: undefined,
   phoneNumber: '',
   address: '',
   entryTime: new Date().toISOString().split('T')[0],
   email: '',
   password: '',
-  isActive: true,
+  active: true,
   birth: new Date().toISOString().split('T')[0]
 })
 
@@ -118,13 +118,13 @@ watch(employee, (val) => {
     formData.phoneNumber = val.phoneNumber
     formData.address = val.address
     formData.email = val.email
-    formData.isActive = val.isActive
+    formData.active = val.active
     formData.entryTime = val.entryTime || ''
     formData.birth = val.birth || ''
     formData.password = '' 
   } else {
-    Object.assign(formData, initialFormData())
-  }
+    Object.assign(formData, initialFormData(),{id : undefined})
+  } 
 }, { immediate: true })
 
 watch(visible, (val) => {
@@ -132,9 +132,9 @@ watch(visible, (val) => {
 })
 
 const handleSubmit = () => {
-  loading.value = true
+  // loading.value = true
   emit('submit', { ...formData })
-  setTimeout(() => { loading.value = false }, 500)
+  // setTimeout(() => { loading.value = false }, 500)
 }
 
 const handleCancel = () => emit('update:visible', false)

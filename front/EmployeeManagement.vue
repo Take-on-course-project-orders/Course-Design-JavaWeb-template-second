@@ -218,7 +218,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">手机号 <span class="text-red-500">*</span></label>
               <input
-                v-model="form.phone"
+                v-model="form.phoneNumber"
                 type="tel"
                 required
                 pattern="^1[3-9]\d{9}$"
@@ -421,7 +421,7 @@ const form = ref<EmployeeForm>({
   address: '',
   age: 0,
   password: '',
-  phone: '',
+  phoneNumber: '',
   email: '',
   isActive: true,
   entryTime: '',
@@ -451,7 +451,7 @@ const openCreateModal = () => {
     address: '',
     age: 0,
     password: '',
-    phone: '',
+    phoneNumber: '',
     email: '',
     isActive: true,
     entryTime: '',
@@ -462,7 +462,7 @@ const openCreateModal = () => {
 
 const openEditModal = (emp: Employee) => {
   isEditing.value = true
-  form.value = { ...emp, password: '' }
+  form.value= { ...emp, password: '' }
   showModal.value = true
 }
 

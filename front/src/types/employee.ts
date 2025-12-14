@@ -6,7 +6,7 @@ export interface Employee {
   address: string
   entryTime: string
   email: string
-  isActive: boolean
+  active: boolean
   birth: string
   password: string
 }

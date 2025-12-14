@@ -148,7 +148,7 @@ const toast = reactive({
 })
 
 const stats = computed(() => {
-  const active = employees.value.filter(e => e.isActive === true).length
+  const active = employees.value.filter(e => e.active === true).length
   return {
     total: total.value,
     active,
@@ -169,10 +169,11 @@ const fetchEmployees = async () => {
   try {
     const res = await getEmployeePage({
       pageNum: pageNum.value,
-      pageSize: pageSize.value
+      pageSize: pageSize.value,
+      keyword: searchKeyword.value
     })
     if (res.code === 200 || res.code === 0) {
-      employees.value = res.data.records,
+      employees.value = res.data.records
       total.value = res.data.total
     }
   } catch (error) {
@@ -210,7 +211,7 @@ const handleView = async (emp: Employee) => {
 }
 
 const handleEdit = (emp: Employee) => {
-  currentEmployee.value = { ...emp }
+  currentEmployee.value = emp
   formVisible.value = true
 }
 
@@ -241,7 +242,8 @@ const handleFormSubmit = async (data: Employee) => {
     }
     formVisible.value = false
     fetchEmployees()
-  } catch {
+  } catch(error : any) {
+    console.error('提交失败', error)
     showToast('操作失败', 'error')
   }
 }
@@ -250,6 +252,7 @@ const handleFormSubmit = async (data: Employee) => {
 
 const handleSearch = () => {
   pageNum.value = 1
+  fetchEmployees()
 }
 
 watch([pageNum, pageSize], () => {
