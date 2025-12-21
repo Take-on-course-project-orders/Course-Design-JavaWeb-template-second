@@ -18,3 +18,10 @@ mybatis-plus:
   type-aliases-package: com.xiaoyang.pojo
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-level: DEBUG
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.xiaoyang.mapper: DEBUG
+    org.springframework.jdbc: DEBUG

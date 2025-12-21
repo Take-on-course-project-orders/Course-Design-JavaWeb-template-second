@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -19,21 +21,17 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-
     @GetMapping("/list")
     public Result<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.list();
         return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), employees);
     }
 
-
     @GetMapping("/page")
     public Result<Page<Employee>> getEmpPage(@RequestParam(defaultValue = "1") Integer pageNum, 
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam(required = false) String keyword) {
         Page<Employee> page = new Page<>(pageNum, pageSize);
-        
-        // 使用MyBatis Plus的条件构造器进行关键词搜索
         Page<Employee> employees = employeeService.lambdaQuery()
                 .like(keyword != null && !keyword.isEmpty(), Employee::getName, keyword)
                 .or(keyword != null && !keyword.isEmpty(), queryWrapper -> queryWrapper.like(Employee::getEmail, keyword))
@@ -52,16 +50,22 @@ public class EmployeeController {
 
 
     @PostMapping("/create")
-    public Result<Boolean> addEmp(@RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
+    public Result<Boolean> addEmp(@Valid @RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String msg = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return new Result<>(ResultCode.BAD_REQUEST.getCode(), msg, false);
         }
 
-        Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO, employee);
-        boolean isSuccess = employeeService.save(employee);
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), isSuccess);
+        try {
+            Employee employee = new Employee();
+            BeanUtils.copyProperties(employeeDTO, employee);
+            System.out.println("Employee to save: " + employee);
+            boolean isSuccess = employeeService.save(employee);
+            return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), isSuccess);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result<>(ResultCode.FAILURE.getCode(), "创建员工失败: " + e.getMessage(), false);
+        }
     }
 
 
